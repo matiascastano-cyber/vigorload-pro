@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VigorLoad Pro - Athlete Performance Tracker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-dark: #0f172a;
+      --bg-darker: #020617;
+      --surface: #1e293b;
+      --surface-light: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg-darker);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4rem;
+      padding: 0 1rem;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 900;
+      font-size: 1.25rem;
+    }
+    
+    .logo-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .card:hover {
+      border-color: var(--primary);
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: scale(1.02);
+    }
+    
+    .btn-secondary {
+      background: var(--surface-light);
+      color: var(--text);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+    
+    /* Forms */
+    input, select {
+      background: var(--bg-darker);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.875rem 1rem;
+      color: var(--text);
+      width: 100%;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--surface-light);
+      outline: none;
+      padding: 0;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      border: none;
+    }
+    
+    /* Stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+      background: var(--bg-dark);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-value {
+      font-family: 'Courier New', monospace;
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 0.25rem;
+    }
+    
+    .stat-subtitle {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    
+    /* Chart */
+    .chart-container {
+      height: 200px;
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .bar {
+      flex: 1;
+      background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 0.5rem 0.5rem 0 0;
+      transition: all 0.3s;
+      cursor: pointer;
+      min-height: 20px;
+    }
+    
+    .bar:hover {
+      opacity: 0.8;
+      transform: scaleY(1.05);
+    }
+    
+    .chart-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding: 0 1rem;
+    }
+    
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .badge-low { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .badge-medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    .badge-high { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: var(--success);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    /* Login Screen */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    .login-card {
+      max-width: 28rem;
+      width: 100%;
+    }
+    
+    .login-icon {
+      width: 5rem;
+      height: 5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+      font-size: 2rem;
+    }
+    
+    .text-center { text-align: center; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .mb-3 { margin-bottom: 1.5rem; }
+    .mb-4 { margin-bottom: 2rem; }
+    .mt-2 { margin-top: 1rem; }
+    
+    h1 { font-size: 2rem; font-weight: 900; }
+    h2 { font-size: 1.75rem; font-weight: 900; }
+    h3 { font-size: 1.5rem; font-weight: 900; }
+    
+    .text-muted { color: var(--text-muted); }
+    .text-primary { color: var(--primary); }
+    
+    .hidden { display: none !important; }
+    
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-1 { gap: 0.5rem; }
+    .gap-2 { gap: 1rem; }
+    
+    .w-full { width: 100%; }
+    
+    .user-badge {
+      background: var(--surface);
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .lang-switcher {
+      background: var(--surface);
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .lang-btn {
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.75rem;
+      background: transparent;
+      color: var(--text-muted);
+    }
+    
+    .lang-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .slider-value {
+      font-family: 'Courier New', monospace;
+      float: right;
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    .athlete-card {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .athlete-card:hover {
+      transform: translateY(-2px);
+    }
+    
+    .athlete-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .metric-item {
+      font-size: 0.875rem;
+    }
+    
+    .metric-label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    
+    .metric-value {
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .athlete-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .athlete-icon {
+      width: 3rem;
+      height: 3rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .athlete-name {
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+    
+    .athlete-logs {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    .api-warning {
+      border-color: var(--warning);
+      margin-bottom: 1.5rem;
+    }
+    
+    .warning-header {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--warning);
+      margin-bottom: 0.5rem;
+    }
+    
+    .btn-icon {
+      padding: 0.5rem;
+    }
+    
+    @media (max-width: 640px) {
+      .header-content {
+        padding: 0 0.5rem;
+      }
+      
+      .logo-text {
+        display: none;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    // Translations
+    const translations = {
+      en: {
+        appName: 'VigorLoad Pro',
+        tagline: 'AI-Powered Athlete Performance Tracking',
+        fullName: 'Full Name',
+        accessRole: 'Access Role',
+        iamAthlete: 'I am an Athlete',
+        iamTrainer: 'I am a Trainer',
+        getStarted: 'Get Started',
+        dashboard: 'Dashboard',
+        trainerDashboard: 'Trainer Dashboard',
+        monitoring: 'Monitoring',
+        addLog: 'Add Log',
+        wellness: 'Wellness',
+        sleep: 'Sleep Quality',
+        rpe: 'RPE (Training Intensity)',
+        soreness: 'Muscle Soreness',
+        stress: 'Stress Level',
+        submit: 'Submit Log',
+        cancel: 'Cancel',
+        aiInsights: 'AI Insights',
+        loading: 'Analyzing data...',
+        noData: 'No data yet. Start logging your daily metrics!',
+        athletes: 'Athletes',
+        selectAthlete: 'Select an athlete to view details',
+        recent7Days: 'Last 7 Days',
+        average: 'Average',
+        loggedSuccessfully: 'Log submitted successfully!',
+        riskLevel: 'Risk Level',
+        low: 'Low',
+        medium: 'Medium',
+        high: 'High',
+        date: 'Date',
+        apiKeySetup: 'Setup Gemini API Key',
+        apiKeyDesc: 'To enable AI analysis, you need a Gemini API key (free at ai.google.dev)',
+        save: 'Save',
+        logs: 'logs',
+        back: 'Back'
+      },
+      es: {
+        appName: 'VigorLoad Pro',
+        tagline: 'Seguimiento de Rendimiento Deportivo con IA',
+        fullName: 'Nombre Completo',
+        accessRole: 'Rol de Acceso',
+        iamAthlete: 'Soy Atleta',
+        iamTrainer: 'Soy Entrenador',
+        getStarted: 'Comenzar',
+        dashboard: 'Panel de Control',
+        trainerDashboard: 'Panel del Entrenador',
+        monitoring: 'Monitoreando',
+        addLog: 'Agregar Registro',
+        wellness: 'Bienestar',
+        sleep: 'Calidad del Sueño',
+        rpe: 'RPE (Intensidad)',
+        soreness: 'Dolor Muscular',
+        stress: 'Nivel de Estrés',
+        submit: 'Enviar Registro',
+        cancel: 'Cancelar',
+        aiInsights: 'Análisis IA',
+        loading: 'Analizando datos...',
+        noData: '¡Sin datos aún. Comienza a registrar tus métricas diarias!',
+        athletes: 'Atletas',
+        selectAthlete: 'Selecciona un atleta para ver detalles',
+        recent7Days: 'Últimos 7 Días',
+        average: 'Promedio',
+        loggedSuccessfully: '¡Registro enviado con éxito!',
+        riskLevel: 'Nivel de Riesgo',
+        low: 'Bajo',
+        medium: 'Medio',
+        high: 'Alto',
+        date: 'Fecha',
+        apiKeySetup: 'Configurar Clave API de Gemini',
+        apiKeyDesc: 'Para habilitar el análisis con IA, necesitas una clave API de Gemini (gratis en ai.google.dev)',
+        save: 'Guardar',
+        logs: 'registros',
+        back: 'Volver'
+      }
+    };
+
+    // State
+    let state = {
+      entries: [],
+      userName: '',
+      userRole: null,
+      language: 'en',
+      selectedAthlete: null,
+      showForm: false,
+      analysis: null,
+      loadingAnalysis: false,
+      notification: null,
+      apiKey: ''
+    };
+
+    // Initialize
+    async function init() {
+      try {
+        const userData = await window.storage.get('vigorload_user');
+        const entriesData = await window.storage.get('vigorload_entries');
+        const langData = await window.storage.get('vigorload_lang');
+        const apiKeyData = await window.storage.get('vigorload_api_key');
+        
+        if (userData) {
+          const user = JSON.parse(userData.value);
+          state.userName = user.name;
+          state.userRole = user.role;
+        }
+        if (entriesData) state.entries = JSON.parse(entriesData.value);
+        if (langData) state.language = langData.value;
+        if (apiKeyData) state.apiKey = apiKeyData.value;
+      } catch (error) {
+        console.log('Starting fresh');
+      }
+      render();
+    }
+
+    // Storage helpers
+    async function saveUser() {
+      try {
+        await window.storage.set('vigorload_user', JSON.stringify({
+          name: state.userName,
+          role: state.userRole
+        }));
+      } catch (e) { console.error(e); }
+    }
+
+    async function saveEntries() {
+      try {
+        await window.storage.set('vigorload_entries', JSON.stringify(state.entries));
+      } catch (e) { console.error(e); }
+    }
+
+    async function saveLanguage() {
+      try {
+        await window.storage.set('vigorload_lang', state.language);
+      } catch (e) { console.error(e); }
+    }
+
+    async function saveApiKey(key) {
+      try {
+        await window.storage.set('vigorload_api_key', key);
+      } catch (e) { console.error(e); }
+    }
+
+    // Actions
+    function handleLogin(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      state.userName = formData.get('name');
+      state.userRole = formData.get('role');
+      saveUser();
+      render();
+    }
+
+    function handleLogout() {
+      state.userName = '';
+      state.userRole = null;
+      state.selectedAthlete = null;
+      window.storage.delete('vigorload_user').catch(console.error);
+      render();
+    }
+
+    function handleLangChange(lang) {
+      state.language = lang;
+      saveLanguage();
+      render();
+    }
+
+    async function handleSubmitEntry(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      
+      const dateObj = new Date(formData.get('dateString'));
+      const entry = {
+        id: Math.random().toString(36).substring(7),
+        timestamp: dateObj.getTime(),
+        userName: state.userName,
+        dateString: dateObj.toLocaleDateString(),
+        wellness: parseInt(formData.get('wellness')),
+        sleep: parseInt(formData.get('sleep')),
+        rpe: parseInt(formData.get('rpe')),
+        soreness: parseInt(formData.get('soreness')),
+        stress: parseInt(formData.get('stress'))
+      };
+      
+      state.entries = state.entries.filter(e => 
+        !(e.userName === entry.userName && e.dateString === entry.dateString)
+      );
+      state.entries.push(entry);
+      state.entries.sort((a, b) => a.timestamp - b.timestamp);
+      
+      await saveEntries();
+      state.showForm = false;
+      showNotification(translations[state.language].loggedSuccessfully);
+      await updateAnalysis();
+      render();
+    }
+
+    function showNotification(msg) {
+      state.notification = msg;
+      render();
+      setTimeout(() => {
+        state.notification = null;
+        render();
+      }, 3000);
+    }
+
+    async function updateAnalysis() {
+      const activeEntries = state.userRole === 'athlete'
+        ? state.entries.filter(e => e.userName === state.userName)
+        : state.selectedAthlete
+          ? state.entries.filter(e => e.userName === state.selectedAthlete)
+          : [];
+      
+      if (activeEntries.length > 0 && state.apiKey) {
+        state.loadingAnalysis = true;
+        render();
+        state.analysis = await analyzeData(activeEntries);
+        state.loadingAnalysis = false;
+        render();
+      } else if (activeEntries.length > 0) {
+        state.analysis = {
+          summary: translations[state.language].apiKeyDesc,
+          recommendation: 'Configure API key to enable analysis',
+          riskLevel: 'low'
+        };
+        render();
+      }
+    }
+
+    async function analyzeData(entries) {
+      if (!state.apiKey) {
+        return {
+          summary: translations[state.language].apiKeyDesc,
+          recommendation: '',
+          riskLevel: 'low'
+        };
+      }
+
+      const recent = entries.slice(-7);
+      const dataStr = recent.map(e => 
+        `Date: ${e.dateString}, Wellness: ${e.wellness}, Sleep: ${e.sleep}, RPE: ${e.rpe}, Soreness: ${e.soreness}, Stress: ${e.stress}`
+      ).join('\n');
+
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${state.apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Analyze athlete data and provide JSON with: summary, recommendation, riskLevel (low/medium/high). Language: ${state.language === 'es' ? 'Spanish' : 'English'}.\n\n${dataStr}`
+              }]
+            }]
+          })
+        });
+        
+        const data = await res.json();
+        const text = data.candidates[0].content.parts[0].text;
+        const match = text.match(/\{[\s\S]*\}/);
+        return match ? JSON.parse(match[0]) : {
+          summary: 'Analysis unavailable',
+          recommendation: '',
+          riskLevel: 'low'
+        };
+      } catch (error) {
+        return {
+          summary: 'AI analysis temporarily unavailable',
+          recommendation: 'Review your trends manually',
+          riskLevel: 'low'
+        };
+      }
+    }
+
+    async function handleApiKeySubmit(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      state.apiKey = formData.get('apiKey');
+      await saveApiKey(state.apiKey);
+      await updateAnalysis();
+      render();
+    }
+
+    // Render
+    function render() {
+      const app = document.getElementById('app');
+      const t = translations[state.language];
+      
+      if (!state.userRole) {
+        app.innerHTML = renderLogin(t);
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        return;
+      }
+      
+      app.innerHTML = renderMain(t);
+      attachEventListeners();
+    }
+
+    function renderLogin(t) {
+      return `
+        <div class="login-screen">
+          <div style="position: absolute; top: 1rem; right: 1rem;">
+            ${renderLangSwitcher()}
+          </div>
+          
+          <div class="card login-card">
+            <div class="login-icon">⚡</div>
+            <h1 class="text-center mb-1">${t.appName}</h1>
+            <p class="text-muted text-center mb-4">${t.tagline}</p>
+            
+            <form id="loginForm">
+              <div class="form-group">
+                <label>${t.fullName}</label>
+                <input name="name" type="text" required />
+              </div>
+              <div class="form-group">
+                <label>${t.accessRole}</label>
+                <select name="role">
+                  <option value="athlete">${t.iamAthlete}</option>
+                  <option value="trainer">${t.iamTrainer}</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-full">${t.getStarted}</button>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMain(t) {
+      const showingTrainerList = state.userRole === 'trainer' && !state.selectedAthlete;
+      
+      return `
+        <header>
+          <div class="header-content container">
+            <div class="logo">
+              <div class="logo-icon">⚡</div>
+              <span class="logo-text">${t.appName}</span>
+            </div>
+            <div class="header-actions">
+              ${renderLangSwitcher()}
+              <div class="user-badge">
+                <span>${state.userRole === 'trainer' ? '🛡️' : '👤'}</span>
+                <span>${state.userName}</span>
+              </div>
+              <button onclick="handleLogout()" class="btn btn-secondary btn-icon">🚪</button>
+            </div>
+          </div>
+        </header>
+        
+        <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+          ${state.notification ? `
+            <div class="notification">✅ ${state.notification}</div>
+          ` : ''}
+          
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+              ${state.selectedAthlete ? `
+                <button onclick="state.selectedAthlete = null; render();" class="btn btn-secondary btn-icon">←</button>
+              ` : ''}
+              <h2>${showingTrainerList ? t.trainerDashboard : 
+                   state.selectedAthlete ? `${t.monitoring}: ${state.selectedAthlete}` : 
+                   t.dashboard}</h2>
+            </div>
+            ${state.userRole === 'athlete' && !state.showForm ? `
+              <button onclick="state.showForm = true; render();" class="btn btn-primary">+ ${t.addLog}</button>
+            ` : ''}
+          </div>
+          
+          ${state.showForm ? renderForm(t) : 
+            showingTrainerList ? renderTrainerDashboard(t) : 
+            renderDashboard(t)}
+        </main>
+      `;
+    }
+
+    function renderLangSwitcher() {
+      return `
+        <div class="lang-switcher">
+          <span style="color: var(--text-muted); font-size: 0.75rem; padding: 0.25rem 0.5rem;">🌐</span>
+          <button onclick="handleLangChange('en')" class="lang-btn ${state.language === 'en' ? 'active' : ''}">EN</button>
+          <button onclick="handleLangChange('es')" class="lang-btn ${state.language === 'es' ? 'active' : ''}">ES</button>
+        </div>
+      `;
+    }
+
+    function renderForm(t) {
+      return `
+        <div class="card" style="max-width: 48rem; margin: 0 auto;">
+          <h3 class="mb-3">${t.addLog}</h3>
+          <form id="entryForm">
+            <div class="form-group">
+              <label>${t.date}</label>
+              <input name="dateString" type="date" value="${new Date().toISOString().split('T')[0]}" required />
+            </div>
+            ${['wellness', 'sleep', 'rpe', 'soreness', 'stress'].map(m => `
+              <div class="form-group">
+                <label>
+                  ${t[m]}
+                  <span class="slider-value" id="${m}Val">5</span>
+                </label>
+                <input 
+                  name="${m}" 
+                  type="range" 
+                  min="1" 
+                  max="10" 
+                  value="5"
+                  oninput="document.getElementById('${m}Val').textContent = this.value"
+                />
+                <div class="slider-labels"><span>1</span><span>10</span></div>
+              </div>
+            `).join('')}
+            <div class="flex gap-2 mt-2">
+              <button type="button" onclick="state.showForm = false; render();" class="btn btn-secondary w-full">${t.cancel}</button>
+              <button type="submit" class="btn btn-primary w-full">✓ ${t.submit}</button>
+            </div>
+          </form>
+        </div>
+      `;
+    }
+
+    function renderDashboard(t) {
+      const entries = state.userRole === 'athlete'
+        ? state.entries.filter(e => e.userName === state.userName)
+        : state.selectedAthlete
+          ? state.entries.filter(e => e.userName === state.selectedAthlete)
+          : [];
+      
+      if (entries.length === 0) {
+        return `
+          <div class="card empty-state">
+            <div class="empty-icon">📊</div>
+            <h3 class="mb-1">${t.noData}</h3>
+            <p class="text-muted">${t.tagline}</p>
+          </div>
+        `;
+      }
+      
+      const recent = entries.slice(-7);
+      const avgWellness = (recent.reduce((s, e) => s + e.wellness, 0) / recent.length).toFixed(1);
+      const avgSleep = (recent.reduce((s, e) => s + e.sleep, 0) / recent.length).toFixed(1);
+      const avgRPE = (recent.reduce((s, e) => s + e.rpe, 0) / recent.length).toFixed(1);
+      
+      return `
+        ${!state.apiKey ? `
+          <div class="card api-warning">
+            <h3 class="warning-header">⚠️ ${t.apiKeySetup}</h3>
+            <p class="text-muted mb-2">${t.apiKeyDesc}</p>
+            <form id="apiKeyForm" class="flex gap-1">
+              <input type="password" name="apiKey" placeholder="AIza..." required style="flex: 1;" />
+              <button type="submit" class="btn btn-primary">${t.save}</button>
+            </form>
+          </div>
+        ` : ''}
+        
+        ${state.analysis ? `
+          <div class="card">
+            <div class="flex items-center gap-2 mb-2">
+              <span>🧠</span>
+              <h3>${t.aiInsights}</h3>
+              <span class="badge badge-${state.analysis.riskLevel}">${t.riskLevel}: ${t[state.analysis.riskLevel]}</span>
+            </div>
+            <p class="mb-2">${state.analysis.summary}</p>
+            ${state.analysis.recommendation ? `<p class="text-muted"><strong class="text-primary">→</strong> ${state.analysis.recommendation}</p>` : ''}
+          </div>
+        ` : state.loadingAnalysis ? `
+          <div class="card"><span>🧠</span> ${t.loading}</div>
+        ` : ''}
+        
+        <div class="stats-grid">
+          ${[
+            { label: t.wellness, value: avgWellness, color: 'var(--success)' },
+            { label: t.sleep, value: avgSleep, color: 'var(--secondary)' },
+            { label: t.rpe, value: avgRPE, color: 'var(--warning)' }
+          ].map(s => `
+            <div class="stat-card">
+              <div class="stat-label">${s.label}</div>
+              <div class="stat-value" style="color: ${s.color};">${s.value}</div>
+              <div class="stat-subtitle">${t.average} · ${t.recent7Days}</div>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div class="card">
+          <h3 class="mb-2">${t.recent7Days}</h3>
+          <div class="chart-container">
+            ${recent.map(e => `
+              <div class="bar" style="height: ${(e.wellness / 10) * 100}%;" title="${e.dateString}: ${e.wellness}/10"></div>
+            `).join('')}
+          </div>
+          <div class="chart-labels">
+            ${recent.map(e => `<span>${new Date(e.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTrainerDashboard(t) {
+      const athletes = [...new Set(state.entries.map(e => e.userName))];
+      
+      if (athletes.length === 0) {
+        return `
+          <div class="card empty-state">
+            <div class="empty-icon">👥</div>
+            <h3 class="mb-1">${t.noData}</h3>
+            <p class="text-muted">${t.selectAthlete}</p>
+          </div>
+        `;
+      }
+      
+      return `
+        <h3 class="mb-3">${t.athletes}</h3>
+        <div class="stats-grid">
+          ${athletes.map(athlete => {
+            const athleteEntries = state.entries.filter(e => e.userName === athlete);
+            const recent = athleteEntries[athleteEntries.length - 1];
+            
+            return `
+              <div class="card athlete-card" onclick="state.selectedAthlete = '${athlete}'; updateAnalysis(); render();">
+                <div class="athlete-header">
+                  <div class="athlete-icon">👤</div>
+                  <div>
+                    <div class="athlete-name">${athlete}</div>
+                    <div class="athlete-logs">${athleteEntries.length} ${t.logs}</div>
+                  </div>
+                </div>
+                ${recent ? `
+                  <div class="athlete-metrics">
+                    ${[
+                      { label: t.wellness, value: recent.wellness },
+                      { label: t.sleep, value: recent.sleep },
+                      { label: t.rpe, value: recent.rpe },
+                      { label: t.stress, value: recent.stress }
+                    ].map(m => `
+                      <div class="metric-item">
+                        <div class="metric-label">${m.label}</div>
+                        <div class="metric-value">${m.value}/10</div>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function attachEventListeners() {
+      const entryForm = document.getElementById('entryForm');
+      if (entryForm) entryForm.addEventListener('submit', handleSubmitEntry);
+      
+      const apiKeyForm = document.getElementById('apiKeyForm');
+      if (apiKeyForm) apiKeyForm.addEventListener('submit', handleApiKeySubmit);
+    }
+
+    // Global functions
+    window.handleLogout = handleLogout;
+    window.handleLangChange = handleLangChange;
+    window.updateAnalysis = updateAnalysis;
+
+    // Start app
+    init();
+  </script>
+</body>
+</html>
