@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taekwondo Wellness Tracker - CeNARD</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #10b981;
+      --accent: #8b5cf6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-dark: #0a0f1e;
+      --bg-darker: #050811;
+      --surface: #151d2f;
+      --surface-light: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #1e293b;
+      --taekwondo-red: #e11d48;
+      --taekwondo-blue: #3b82f6;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg-darker);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(16px);
+      background: rgba(10, 15, 30, 0.95);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4.5rem;
+      padding: 0 1.5rem;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .logo-icon {
+      width: 3rem;
+      height: 3rem;
+      background: linear-gradient(135deg, var(--taekwondo-red) 0%, var(--taekwondo-blue) 100%);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+    }
+    
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+    
+    .logo-title {
+      font-weight: 900;
+      font-size: 1.125rem;
+      letter-spacing: -0.025em;
+    }
+    
+    .logo-subtitle {
+      font-size: 0.625rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: inherit;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-secondary {
+      background: var(--surface-light);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--border);
+      border-color: var(--primary);
+    }
+    
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      border-radius: 0.5rem;
+    }
+    
+    /* Period Filter */
+    .period-filter {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--bg-dark);
+      padding: 0.375rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+    }
+    
+    .period-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+    }
+    
+    .period-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+    
+    .period-btn:not(.active):hover {
+      background: var(--surface);
+      color: var(--text);
+    }
+    
+    /* Forms */
+    input, select {
+      background: var(--bg-darker);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.875rem 1rem;
+      color: var(--text);
+      width: 100%;
+      font-size: 0.875rem;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    /* Slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--surface-light);
+      outline: none;
+      padding: 0;
+      border: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
+      transition: all 0.2s;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.15);
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.5);
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+      background: var(--bg-dark);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+    
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .stat-value {
+      font-family: 'Courier New', monospace;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .stat-subtitle {
+      color: var(--text-muted);
+      font-size: 0.6875rem;
+    }
+    
+    /* Readiness Score */
+    .readiness-card {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--bg-dark) 100%);
+      border: 1px solid var(--primary);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+    }
+    
+    .readiness-score {
+      font-size: 4rem;
+      font-weight: 900;
+      text-align: center;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 1rem 0;
+    }
+    
+    .readiness-label {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+    
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 250px;
+    }
+    
+    /* Correlation Chart */
+    .correlation-chart {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      padding: 2rem 1rem 2rem 3rem;
+    }
+    
+    .correlation-grid {
+      position: absolute;
+      inset: 2rem 1rem 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .grid-line {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      position: relative;
+    }
+    
+    .grid-label {
+      position: absolute;
+      left: -2.5rem;
+      top: -0.5rem;
+      font-size: 0.625rem;
+      color: var(--text-muted);
+    }
+    
+    .correlation-points {
+      position: absolute;
+      inset: 2rem 1rem 2rem 3rem;
+    }
+    
+    .correlation-point {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .correlation-point:hover {
+      transform: translate(-50%, -50%) scale(1.5);
+    }
+    
+    .point-rpe {
+      background: var(--taekwondo-red);
+      box-shadow: 0 0 12px rgba(225, 29, 72, 0.6);
+    }
+    
+    .point-wellness {
+      background: var(--secondary);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+    }
+    
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    /* Radar Chart */
+    .radar-chart {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .radar-svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Bar Chart */
+    .bar-chart {
+      height: 200px;
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .bar {
+      flex: 1;
+      background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: 0.5rem 0.5rem 0 0;
+      transition: all 0.3s;
+      cursor: pointer;
+      min-height: 20px;
+      position: relative;
+    }
+    
+    .bar:hover {
+      opacity: 0.8;
+      transform: scaleY(1.05);
+    }
+    
+    .bar::after {
+      content: attr(data-value);
+      position: absolute;
+      top: -1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.625rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    
+    .bar:hover::after {
+      opacity: 1;
+    }
+    
+    .chart-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.625rem;
+      color: var(--text-muted);
+      padding: 0 1rem;
+    }
+    
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    
+    .badge-low { 
+      background: rgba(16, 185, 129, 0.15); 
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-medium { 
+      background: rgba(245, 158, 11, 0.15); 
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .badge-high { 
+      background: rgba(239, 68, 68, 0.15); 
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 5rem;
+      right: 2rem;
+      background: var(--success);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    /* Login Screen */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+    }
+    
+    .login-screen::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(225, 29, 72, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .login-card {
+      max-width: 28rem;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .login-icon {
+      width: 5rem;
+      height: 5rem;
+      background: linear-gradient(135deg, var(--taekwondo-red) 0%, var(--taekwondo-blue) 100%);
+      border-radius: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 20px 40px rgba(225, 29, 72, 0.3);
+      font-size: 2.5rem;
+    }
+    
+    .text-center { text-align: center; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .mb-3 { margin-bottom: 1.5rem; }
+    .mb-4 { margin-bottom: 2rem; }
+    .mt-2 { margin-top: 1rem; }
+    
+    h1 { font-size: 1.875rem; font-weight: 900; }
+    h2 { font-size: 1.75rem; font-weight: 900; }
+    h3 { font-size: 1.25rem; font-weight: 700; }
+    
+    .text-muted { color: var(--text-muted); }
+    .text-primary { color: var(--primary); }
+    
+    .hidden { display: none !important; }
+    
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-1 { gap: 0.5rem; }
+    .gap-2 { gap: 1rem; }
+    
+    .w-full { width: 100%; }
+    
+    .user-badge {
+      background: var(--surface);
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    
+    .lang-switcher {
+      background: var(--surface);
+      padding: 0.25rem;
+      border-radius: 0.625rem;
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .lang-btn {
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.6875rem;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    
+    .lang-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+    }
+    
+    .slider-value {
+      font-family: 'Courier New', monospace;
+      float: right;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 1.125rem;
+      font-weight: 900;
+    }
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .api-warning {
+      border-color: var(--warning);
+      background: rgba(245, 158, 11, 0.05);
+    }
+    
+    .warning-header {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--warning);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-icon {
+      padding: 0.625rem;
+    }
+    
+    .ai-insight-card {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--bg-dark) 100%);
+      border: 1px solid var(--primary);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .ai-insight-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+    
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .header-content {
+        padding: 0 1rem;
+      }
+      
+      .logo-text {
+        display: none;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .period-filter {
+        overflow-x: auto;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    // Translations
+    const translations = {
+      en: {
+        appName: 'Taekwondo Wellness Tracker',
+        appSubtitle: 'Powered by Lab. Fisiología del Ejercicio CeNARD',
+        tagline: 'Performance Monitoring & Analysis',
+        fullName: 'Full Name',
+        accessRole: 'Access Role',
+        iamAthlete: 'I am an Athlete',
+        iamTrainer: 'I am a Trainer',
+        getStarted: 'Get Started',
+        dashboard: 'Performance Dashboard',
+        trainerDashboard: 'Trainer Dashboard',
+        monitoring: 'Monitoring',
+        addLog: 'New Daily Log',
+        wellness: 'Wellness',
+        sleep: 'Sleep Quality',
+        rpe: 'RPE',
+        soreness: 'Muscle Soreness',
+        stress: 'Stress Level',
+        submit: 'Submit Log',
+        cancel: 'Cancel',
+        aiInsights: 'Vigor AI Performance Insight',
+        loading: 'Analyzing data...',
+        noData: 'No data yet. Start logging your daily metrics!',
+        athletes: 'Athletes',
+        selectAthlete: 'Select an athlete to view details',
+        recent7Days: 'Last 7 Days',
+        average: 'Average',
+        loggedSuccessfully: 'Log submitted successfully!',
+        riskLevel: 'Risk',
+        low: 'Low',
+        medium: 'Medium',
+        high: 'High',
+        date: 'Date',
+        apiKeySetup: 'Setup Gemini API Key',
+        apiKeyDesc: 'To enable AI analysis, you need a Gemini API key (free at ai.google.dev)',
+        save: 'Save',
+        logs: 'logs',
+        back: 'Back',
+        analysisPeriod: 'Analysis Period:',
+        days7: '7 Days',
+        days14: '14 Days',
+        days30: '30 Days',
+        allTime: 'All Time',
+        wellnessVsLoad: 'Wellness vs Load Correlation',
+        latestSnapshot: 'Latest Snapshot',
+        readinessScore: 'Readiness Score',
+        recommendation: 'Recommendation:'
+      },
+      es: {
+        appName: 'Taekwondo Wellness Tracker',
+        appSubtitle: 'Powered by Lab. Fisiología del Ejercicio CeNARD',
+        tagline: 'Monitoreo y Análisis de Rendimiento',
+        fullName: 'Nombre Completo',
+        accessRole: 'Rol de Acceso',
+        iamAthlete: 'Soy Atleta',
+        iamTrainer: 'Soy Entrenador',
+        getStarted: 'Comenzar',
+        dashboard: 'Panel de Rendimiento',
+        trainerDashboard: 'Panel del Entrenador',
+        monitoring: 'Monitoreando',
+        addLog: 'Nuevo Registro Diario',
+        wellness: 'Bienestar',
+        sleep: 'Calidad del Sueño',
+        rpe: 'RPE',
+        soreness: 'Dolor Muscular',
+        stress: 'Nivel de Estrés',
+        submit: 'Enviar Registro',
+        cancel: 'Cancelar',
+        aiInsights: 'Vigor IA Análisis de Rendimiento',
+        loading: 'Analizando datos...',
+        noData: '¡Sin datos aún. Comienza a registrar tus métricas diarias!',
+        athletes: 'Atletas',
+        selectAthlete: 'Selecciona un atleta para ver detalles',
+        recent7Days: 'Últimos 7 Días',
+        average: 'Promedio',
+        loggedSuccessfully: '¡Registro enviado con éxito!',
+        riskLevel: 'Riesgo',
+        low: 'Bajo',
+        medium: 'Medio',
+        high: 'Alto',
+        date: 'Fecha',
+        apiKeySetup: 'Configurar Clave API de Gemini',
+        apiKeyDesc: 'Para habilitar el análisis con IA, necesitas una clave API de Gemini (gratis en ai.google.dev)',
+        save: 'Guardar',
+        logs: 'registros',
+        back: 'Volver',
+        analysisPeriod: 'Período de Análisis:',
+        days7: '7 Días',
+        days14: '14 Días',
+        days30: '30 Días',
+        allTime: 'Todo',
+        wellnessVsLoad: 'Correlación Bienestar vs Carga',
+        latestSnapshot: 'Snapshot Actual',
+        readinessScore: 'Puntuación de Preparación',
+        recommendation: 'Recomendación:'
+      }
+    };
+
+    // State
+    let state = {
+      entries: [],
+      userName: '',
+      userRole: null,
+      language: 'en',
+      selectedAthlete: null,
+      showForm: false,
+      analysis: null,
+      loadingAnalysis: false,
+      notification: null,
+      apiKey: '',
+      periodFilter: 7 // 7, 14, 30, or 0 (all time)
+    };
+
+    // Initialize
+    async function init() {
+      try {
+        const userData = await window.storage.get('tkd_user');
+        const entriesData = await window.storage.get('tkd_entries');
+        const langData = await window.storage.get('tkd_lang');
+        const apiKeyData = await window.storage.get('tkd_api_key');
+        
+        if (userData) {
+          const user = JSON.parse(userData.value);
+          state.userName = user.name;
+          state.userRole = user.role;
+        }
+        if (entriesData) state.entries = JSON.parse(entriesData.value);
+        if (langData) state.language = langData.value;
+        if (apiKeyData) state.apiKey = apiKeyData.value;
+      } catch (error) {
+        console.log('Starting fresh');
+      }
+      render();
+    }
+
+    // Storage helpers
+    async function saveUser() {
+      try {
+        await window.storage.set('tkd_user', JSON.stringify({
+          name: state.userName,
+          role: state.userRole
+        }));
+      } catch (e) { console.error(e); }
+    }
+
+    async function saveEntries() {
+      try {
+        await window.storage.set('tkd_entries', JSON.stringify(state.entries));
+      } catch (e) { console.error(e); }
+    }
+
+    async function saveLanguage() {
+      try {
+        await window.storage.set('tkd_lang', state.language);
+      } catch (e) { console.error(e); }
+    }
+
+    async function saveApiKey(key) {
+      try {
+        await window.storage.set('tkd_api_key', key);
+      } catch (e) { console.error(e); }
+    }
+
+    // Calculate Readiness Score
+    function calculateReadinessScore(entries) {
+      if (entries.length === 0) return 0;
+      const recent = entries.slice(-7);
+      const avgWellness = recent.reduce((s, e) => s + e.wellness, 0) / recent.length;
+      const avgSleep = recent.reduce((s, e) => s + e.sleep, 0) / recent.length;
+      const avgRPE = recent.reduce((s, e) => s + e.rpe, 0) / recent.length;
+      const avgSoreness = recent.reduce((s, e) => s + e.soreness, 0) / recent.length;
+      const avgStress = recent.reduce((s, e) => s + e.stress, 0) / recent.length;
+      
+      // Higher wellness and sleep = good, lower RPE, soreness, stress = good
+      const score = ((avgWellness + avgSleep + (10 - avgRPE) + (10 - avgSoreness) + (10 - avgStress)) / 5);
+      return Math.round(score * 10) / 10;
+    }
+
+    // Filter entries by period
+    function getFilteredEntries(allEntries) {
+      if (state.periodFilter === 0) return allEntries;
+      
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - state.periodFilter);
+      const cutoffTimestamp = cutoffDate.getTime();
+      
+      return allEntries.filter(e => e.timestamp >= cutoffTimestamp);
+    }
+
+    // Actions
+    function handleLogin(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      state.userName = formData.get('name');
+      state.userRole = formData.get('role');
+      saveUser();
+      render();
+    }
+
+    function handleLogout() {
+      state.userName = '';
+      state.userRole = null;
+      state.selectedAthlete = null;
+      window.storage.delete('tkd_user').catch(console.error);
+      render();
+    }
+
+    function handleLangChange(lang) {
+      state.language = lang;
+      saveLanguage();
+      render();
+    }
+
+    function handlePeriodChange(days) {
+      state.periodFilter = days;
+      render();
+    }
+
+    async function handleSubmitEntry(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      
+      const dateObj = new Date(formData.get('dateString'));
+      const entry = {
+        id: Math.random().toString(36).substring(7),
+        timestamp: dateObj.getTime(),
+        userName: state.userName,
+        dateString: dateObj.toLocaleDateString(),
+        wellness: parseInt(formData.get('wellness')),
+        sleep: parseInt(formData.get('sleep')),
+        rpe: parseInt(formData.get('rpe')),
+        soreness: parseInt(formData.get('soreness')),
+        stress: parseInt(formData.get('stress'))
+      };
+      
+      state.entries = state.entries.filter(e => 
+        !(e.userName === entry.userName && e.dateString === entry.dateString)
+      );
+      state.entries.push(entry);
+      state.entries.sort((a, b) => a.timestamp - b.timestamp);
+      
+      await saveEntries();
+      state.showForm = false;
+      showNotification(translations[state.language].loggedSuccessfully);
+      await updateAnalysis();
+      render();
+    }
+
+    function showNotification(msg) {
+      state.notification = msg;
+      render();
+      setTimeout(() => {
+        state.notification = null;
+        render();
+      }, 3000);
+    }
+
+    async function updateAnalysis() {
+      const activeEntries = state.userRole === 'athlete'
+        ? state.entries.filter(e => e.userName === state.userName)
+        : state.selectedAthlete
+          ? state.entries.filter(e => e.userName === state.selectedAthlete)
+          : [];
+      
+      if (activeEntries.length > 0 && state.apiKey) {
+        state.loadingAnalysis = true;
+        render();
+        state.analysis = await analyzeData(activeEntries);
+        state.loadingAnalysis = false;
+        render();
+      } else if (activeEntries.length > 0) {
+        state.analysis = {
+          summary: translations[state.language].apiKeyDesc,
+          recommendation: 'Configure API key to enable analysis',
+          riskLevel: 'low'
+        };
+        render();
+      }
+    }
+
+    async function analyzeData(entries) {
+      if (!state.apiKey) {
+        return {
+          summary: 'Unable to generate AI insights at this time.',
+          recommendation: translations[state.language].apiKeyDesc,
+          riskLevel: 'low'
+        };
+      }
+
+      const recent = entries.slice(-7);
+      const dataStr = recent.map(e => 
+        `Date: ${e.dateString}, Wellness: ${e.wellness}, Sleep: ${e.sleep}, RPE: ${e.rpe}, Soreness: ${e.soreness}, Stress: ${e.stress}`
+      ).join('\n');
+
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${state.apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Analyze this Taekwondo athlete's wellness and training load data. Provide JSON with: summary (brief analysis), recommendation (specific action), riskLevel (low/medium/high). Language: ${state.language === 'es' ? 'Spanish' : 'English'}.\n\n${dataStr}`
+              }]
+            }]
+          })
+        });
+        
+        const data = await res.json();
+        const text = data.candidates[0].content.parts[0].text;
+        const match = text.match(/\{[\s\S]*\}/);
+        return match ? JSON.parse(match[0]) : {
+          summary: 'Analysis unavailable',
+          recommendation: 'Review your RPE vs Sleep trends manually.',
+          riskLevel: 'low'
+        };
+      } catch (error) {
+        return {
+          summary: 'AI analysis temporarily unavailable',
+          recommendation: 'Review your trends manually',
+          riskLevel: 'low'
+        };
+      }
+    }
+
+    async function handleApiKeySubmit(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      state.apiKey = formData.get('apiKey');
+      await saveApiKey(state.apiKey);
+      await updateAnalysis();
+      render();
+    }
+
+    // Render Components
+    function renderRadarChart(entry) {
+      if (!entry) return '';
+      
+      const size = 250;
+      const center = size / 2;
+      const radius = 80;
+      const metrics = [
+        { label: 'Wellness', value: entry.wellness, angle: 0 },
+        { label: 'Sleep Qual', value: entry.sleep, angle: 72 },
+        { label: 'RPE', value: entry.rpe, angle: 144 },
+        { label: 'Muscle Soreness', value: entry.soreness, angle: 216 },
+        { label: 'Stress Level', value: entry.stress, angle: 288 }
+      ];
+      
+      // Calculate points
+      const points = metrics.map(m => {
+        const rad = (m.angle - 90) * Math.PI / 180;
+        const r = (m.value / 10) * radius;
+        return {
+          x: center + r * Math.cos(rad),
+          y: center + r * Math.sin(rad),
+          label: m.label,
+          value: m.value,
+          angle: m.angle
+        };
+      });
+      
+      const polygonPoints = points.map(p => `${p.x},${p.y}`).join(' ');
+      
+      // Grid circles
+      const gridCircles = [2, 4, 6, 8, 10].map(level => 
+        `<circle cx="${center}" cy="${center}" r="${(level / 10) * radius}" fill="none" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1"/>`
+      ).join('');
+      
+      // Axis lines
+      const axisLines = metrics.map(m => {
+        const rad = (m.angle - 90) * Math.PI / 180;
+        const x = center + radius * Math.cos(rad);
+        const y = center + radius * Math.sin(rad);
+        return `<line x1="${center}" y1="${center}" x2="${x}" y2="${y}" stroke="rgba(148, 163, 184, 0.2)" stroke-width="1"/>`;
+      }).join('');
+      
+      // Labels
+      const labels = metrics.map((m, i) => {
+        const rad = (m.angle - 90) * Math.PI / 180;
+        const labelRadius = radius + 25;
+        const x = center + labelRadius * Math.cos(rad);
+        const y = center + labelRadius * Math.sin(rad);
+        return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" fill="#94a3b8" font-size="10" font-weight="600">${m.label}</text>`;
+      }).join('');
+      
+      return `
+        <svg class="radar-svg" viewBox="0 0 ${size} ${size}">
+          ${gridCircles}
+          ${axisLines}
+          <polygon points="${polygonPoints}" fill="rgba(59, 130, 246, 0.2)" stroke="#3b82f6" stroke-width="2"/>
+          ${points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4" fill="#3b82f6"/>`).join('')}
+          ${labels}
+        </svg>
+      `;
+    }
+
+    function renderCorrelationChart(entries) {
+      const t = translations[state.language];
+      if (entries.length === 0) return '';
+      
+      const maxIndex = entries.length - 1;
+      
+      return `
+        <div class="correlation-chart">
+          <div class="correlation-grid">
+            ${[10, 8, 6, 4, 2, 0].map(val => `
+              <div class="grid-line">
+                <span class="grid-label">${val}</span>
+              </div>
+            `).join('')}
+          </div>
+          <div class="correlation-points">
+            ${entries.map((e, i) => {
+              const x = (i / maxIndex) * 100;
+              const yRPE = 100 - (e.rpe / 10) * 100;
+              const yWellness = 100 - (e.wellness / 10) * 100;
+              return `
+                <div class="correlation-point point-rpe" style="left: ${x}%; top: ${yRPE}%;" title="RPE: ${e.rpe}"></div>
+                <div class="correlation-point point-wellness" style="left: ${x}%; top: ${yWellness}%;" title="Wellness: ${e.wellness}"></div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background: var(--taekwondo-red);"></span>
+            <span>RPE</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background: var(--secondary);"></span>
+            <span>Wellness</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Main Render
+    function render() {
+      const app = document.getElementById('app');
+      const t = translations[state.language];
+      
+      if (!state.userRole) {
+        app.innerHTML = renderLogin(t);
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        return;
+      }
+      
+      app.innerHTML = renderMain(t);
+      attachEventListeners();
+    }
+
+    function renderLogin(t) {
+      return `
+        <div class="login-screen">
+          <div style="position: absolute; top: 1.5rem; right: 1.5rem; z-index: 10;">
+            ${renderLangSwitcher()}
+          </div>
+          
+          <div class="card login-card">
+            <div class="login-icon">🥋</div>
+            <h1 class="text-center mb-1">${t.appName}</h1>
+            <p class="text-muted text-center" style="font-size: 0.75rem; margin-bottom: 0.5rem;">${t.appSubtitle}</p>
+            <p class="text-muted text-center mb-4">${t.tagline}</p>
+            
+            <form id="loginForm">
+              <div class="form-group">
+                <label>${t.fullName}</label>
+                <input name="name" type="text" required />
+              </div>
+              <div class="form-group">
+                <label>${t.accessRole}</label>
+                <select name="role">
+                  <option value="athlete">${t.iamAthlete}</option>
+                  <option value="trainer">${t.iamTrainer}</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-full">${t.getStarted}</button>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMain(t) {
+      const showingTrainerList = state.userRole === 'trainer' && !state.selectedAthlete;
+      
+      return `
+        <header>
+          <div class="header-content container">
+            <div class="logo">
+              <div class="logo-icon">🥋</div>
+              <div class="logo-text">
+                <div class="logo-title">${t.appName}</div>
+                <div class="logo-subtitle">${t.appSubtitle}</div>
+              </div>
+            </div>
+            <div class="header-actions">
+              ${renderLangSwitcher()}
+              <div class="user-badge">
+                <span>${state.userRole === 'trainer' ? '🛡️' : '👤'}</span>
+                <span>${state.userName}</span>
+              </div>
+              <button onclick="handleLogout()" class="btn btn-secondary btn-icon">🚪</button>
+            </div>
+          </div>
+        </header>
+        
+        <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+          ${state.notification ? `
+            <div class="notification">
+              <span style="font-size: 1.25rem;">✅</span>
+              <span>${state.notification}</span>
+            </div>
+          ` : ''}
+          
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+              ${state.selectedAthlete ? `
+                <button onclick="state.selectedAthlete = null; render();" class="btn btn-secondary btn-small">← ${t.back}</button>
+              ` : ''}
+              <h2>${showingTrainerList ? t.trainerDashboard : 
+                   state.selectedAthlete ? `${t.monitoring}: ${state.selectedAthlete}` : 
+                   t.dashboard}</h2>
+            </div>
+            ${state.userRole === 'athlete' && !state.showForm ? `
+              <button onclick="state.showForm = true; render();" class="btn btn-primary">+ ${t.addLog}</button>
+            ` : ''}
+          </div>
+          
+          ${state.showForm ? renderForm(t) : 
+            showingTrainerList ? renderTrainerDashboard(t) : 
+            renderDashboard(t)}
+        </main>
+      `;
+    }
+
+    function renderLangSwitcher() {
+      return `
+        <div class="lang-switcher">
+          <span style="color: var(--text-muted); font-size: 0.625rem; padding: 0.375rem 0.5rem;">🌐</span>
+          <button onclick="handleLangChange('en')" class="lang-btn ${state.language === 'en' ? 'active' : ''}">EN</button>
+          <button onclick="handleLangChange('es')" class="lang-btn ${state.language === 'es' ? 'active' : ''}">ES</button>
+        </div>
+      `;
+    }
+
+    function renderPeriodFilter(t) {
+      return `
+        <div class="flex items-center gap-2">
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">${t.analysisPeriod}</span>
+          <div class="period-filter">
+            <button onclick="handlePeriodChange(7)" class="period-btn ${state.periodFilter === 7 ? 'active' : ''}">${t.days7}</button>
+            <button onclick="handlePeriodChange(14)" class="period-btn ${state.periodFilter === 14 ? 'active' : ''}">${t.days14}</button>
+            <button onclick="handlePeriodChange(30)" class="period-btn ${state.periodFilter === 30 ? 'active' : ''}">${t.days30}</button>
+            <button onclick="handlePeriodChange(0)" class="period-btn ${state.periodFilter === 0 ? 'active' : ''}">${t.allTime}</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderForm(t) {
+      return `
+        <div class="card" style="max-width: 48rem; margin: 0 auto;">
+          <div class="card-header">
+            <h3>${t.addLog}</h3>
+          </div>
+          <form id="entryForm">
+            <div class="form-group">
+              <label>${t.date}</label>
+              <input name="dateString" type="date" value="${new Date().toISOString().split('T')[0]}" required />
+            </div>
+            ${['wellness', 'sleep', 'rpe', 'soreness', 'stress'].map(m => `
+              <div class="form-group">
+                <label>
+                  ${t[m]}
+                  <span class="slider-value" id="${m}Val">5</span>
+                </label>
+                <input 
+                  name="${m}" 
+                  type="range" 
+                  min="1" 
+                  max="10" 
+                  value="5"
+                  oninput="document.getElementById('${m}Val').textContent = this.value"
+                />
+                <div class="slider-labels"><span>1</span><span>10</span></div>
+              </div>
+            `).join('')}
+            <div class="flex gap-2 mt-2">
+              <button type="button" onclick="state.showForm = false; render();" class="btn btn-secondary w-full">${t.cancel}</button>
+              <button type="submit" class="btn btn-primary w-full">✓ ${t.submit}</button>
+            </div>
+          </form>
+        </div>
+      `;
+    }
+
+    function renderDashboard(t) {
+      const allEntries = state.userRole === 'athlete'
+        ? state.entries.filter(e => e.userName === state.userName)
+        : state.selectedAthlete
+          ? state.entries.filter(e => e.userName === state.selectedAthlete)
+          : [];
+      
+      if (allEntries.length === 0) {
+        return `
+          <div class="card empty-state">
+            <div class="empty-icon">📊</div>
+            <h3 class="mb-1">${t.noData}</h3>
+            <p class="text-muted">${t.tagline}</p>
+          </div>
+        `;
+      }
+      
+      const entries = getFilteredEntries(allEntries);
+      const recent = entries.slice(-7);
+      const latestEntry = entries[entries.length - 1];
+      
+      const avgWellness = (recent.reduce((s, e) => s + e.wellness, 0) / recent.length).toFixed(1);
+      const avgSleep = (recent.reduce((s, e) => s + e.sleep, 0) / recent.length).toFixed(1);
+      const avgRPE = (recent.reduce((s, e) => s + e.rpe, 0) / recent.length).toFixed(1);
+      
+      const readinessScore = calculateReadinessScore(entries);
+      
+      return `
+        <div class="flex justify-between items-center mb-3">
+          ${renderPeriodFilter(t)}
+        </div>
+        
+        ${!state.apiKey ? `
+          <div class="card api-warning">
+            <h3 class="warning-header">
+              <span>⚠️</span>
+              <span>${t.apiKeySetup}</span>
+            </h3>
+            <p class="text-muted mb-2" style="font-size: 0.875rem;">${t.apiKeyDesc}</p>
+            <form id="apiKeyForm" class="flex gap-1">
+              <input type="password" name="apiKey" placeholder="AIza..." required style="flex: 1;" />
+              <button type="submit" class="btn btn-primary btn-small">${t.save}</button>
+            </form>
+          </div>
+        ` : ''}
+        
+        ${state.analysis ? `
+          <div class="card ai-insight-card">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span style="font-size: 1.5rem;">🧠</span>
+                <h3>${t.aiInsights}</h3>
+              </div>
+              <span class="badge badge-${state.analysis.riskLevel}">
+                ${t.riskLevel}: ${t[state.analysis.riskLevel].toUpperCase()}
+              </span>
+            </div>
+            <p class="mb-2" style="line-height: 1.8;">${state.analysis.summary}</p>
+            ${state.analysis.recommendation ? `
+              <p class="text-muted" style="line-height: 1.8;">
+                <strong style="color: var(--primary);">💡 ${t.recommendation}</strong> ${state.analysis.recommendation}
+              </p>
+            ` : ''}
+          </div>
+        ` : state.loadingAnalysis ? `
+          <div class="card">
+            <div class="flex items-center gap-2">
+              <span style="font-size: 1.5rem;">🧠</span>
+              <span class="text-muted">${t.loading}</span>
+            </div>
+          </div>
+        ` : ''}
+        
+        <div class="stats-grid">
+          ${[
+            { label: t.wellness, value: avgWellness, color: 'var(--secondary)' },
+            { label: t.sleep, value: avgSleep, color: 'var(--primary)' },
+            { label: t.rpe, value: avgRPE, color: 'var(--warning)' }
+          ].map(s => `
+            <div class="stat-card">
+              <div class="stat-label">${s.label}</div>
+              <div class="stat-value" style="color: ${s.color};">${s.value}</div>
+              <div class="stat-subtitle">${t.average}</div>
+            </div>
+          `).join('')}
+          
+          <div class="stat-card readiness-card">
+            <div class="readiness-label">${t.readinessScore}</div>
+            <div class="readiness-score">${readinessScore}<span style="font-size: 2rem;">/10</span></div>
+          </div>
+        </div>
+        
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <span>📈</span>
+                ${t.wellnessVsLoad}
+              </h3>
+            </div>
+            ${renderCorrelationChart(entries)}
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                <span>🎯</span>
+                ${t.latestSnapshot}
+              </h3>
+            </div>
+            <div class="radar-chart">
+              ${renderRadarChart(latestEntry)}
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <span>📊</span>
+              ${t.wellness} - ${state.periodFilter === 0 ? t.allTime : state.periodFilter + ' ' + t.days7.split(' ')[1]}
+            </h3>
+          </div>
+          <div class="bar-chart">
+            ${recent.map(e => `
+              <div class="bar" style="height: ${(e.wellness / 10) * 100}%;" data-value="${e.wellness}" title="${e.dateString}: ${e.wellness}/10"></div>
+            `).join('')}
+          </div>
+          <div class="chart-labels">
+            ${recent.map(e => `<span>${new Date(e.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTrainerDashboard(t) {
+      const athletes = [...new Set(state.entries.map(e => e.userName))];
+      
+      if (athletes.length === 0) {
+        return `
+          <div class="card empty-state">
+            <div class="empty-icon">👥</div>
+            <h3 class="mb-1">${t.noData}</h3>
+            <p class="text-muted">${t.selectAthlete}</p>
+          </div>
+        `;
+      }
+      
+      return `
+        <h3 class="mb-3">${t.athletes}</h3>
+        <div class="stats-grid">
+          ${athletes.map(athlete => {
+            const athleteEntries = state.entries.filter(e => e.userName === athlete);
+            const recent = athleteEntries[athleteEntries.length - 1];
+            const readiness = calculateReadinessScore(athleteEntries);
+            
+            return `
+              <div class="card" style="cursor: pointer;" onclick="state.selectedAthlete = '${athlete}'; updateAnalysis(); render();">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                  <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3rem; height: 3rem; background: linear-gradient(135deg, var(--taekwondo-red) 0%, var(--taekwondo-blue) 100%); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">👤</div>
+                    <div>
+                      <div style="font-weight: 700; font-size: 1.125rem;">${athlete}</div>
+                      <div style="color: var(--text-muted); font-size: 0.8125rem;">${athleteEntries.length} ${t.logs}</div>
+                    </div>
+                  </div>
+                  <div style="text-align: center;">
+                    <div style="font-size: 0.625rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">${t.readinessScore}</div>
+                    <div style="font-size: 1.75rem; font-weight: 900; background: linear-gradient(135deg, var(--secondary), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${readiness}</div>
+                  </div>
+                </div>
+                ${recent ? `
+                  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                    ${[
+                      { label: t.wellness, value: recent.wellness },
+                      { label: t.sleep, value: recent.sleep },
+                      { label: t.rpe, value: recent.rpe },
+                      { label: t.stress, value: recent.stress }
+                    ].map(m => `
+                      <div>
+                        <div style="font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">${m.label}</div>
+                        <div style="font-family: 'Courier New', monospace; font-weight: 700; color: var(--primary); font-size: 1.125rem;">${m.value}/10</div>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function attachEventListeners() {
+      const entryForm = document.getElementById('entryForm');
+      if (entryForm) entryForm.addEventListener('submit', handleSubmitEntry);
+      
+      const apiKeyForm = document.getElementById('apiKeyForm');
+      if (apiKeyForm) apiKeyForm.addEventListener('submit', handleApiKeySubmit);
+    }
+
+    // Global functions
+    window.handleLogout = handleLogout;
+    window.handleLangChange = handleLangChange;
+    window.handlePeriodChange = handlePeriodChange;
+    window.updateAnalysis = updateAnalysis;
+
+    // Start app
+    init();
+  </script>
+</body>
+</html>
